@@ -1,0 +1,17 @@
+.deps
+autom4te.cache
+*.o
+*~
+aclocal.m4
+Makefile
+Makefile.in
+config.*
+configure
+install-sh
+depcomp
+missing
+stamp-h1
+
+rss
+
+
