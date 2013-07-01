@@ -37,18 +37,11 @@ public:
 		std::string rss;
 		rss =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-"<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">"
+"<rss version=\"2.0\">"
 "  <channel>"
-"    <atom:link rel=\"self\" type=\"application/rss+xml\" href=\"http://news.nicovideo.jp/topiclist?rss=2.0\"/>"
-"    <title>トピックス一覧-ニコニコニュース</title>"
-"    <link>http://news.nicovideo.jp/topiclist</link>"
-"    <description>ニコニコニュースで取り上げている最新ニュースを提供しています。</description>"
-"    <pubDate>Mon, 01 Jul 2013 14:39:44 +0900</pubDate>"
-"    <lastBuildDate>Mon, 01 Jul 2013 14:39:44 +0900</lastBuildDate>"
-"    <generator>ニコニコニュース</generator>"
-"    <language>ja</language>"
-"    <copyright>(c) niwango, inc. All rights reserved.</copyright>"
-"    <docs>http://blogs.law.harvard.edu/tech/rss</docs>";
+"    <title>rss</title>"
+"    <link>http://localhost/</link>"
+"    <description>merge rss feeds</description>";
 
 		for (std::list<std::string>::reverse_iterator it = result.rbegin(), end = result.rend(); it != end; ++it)
 		{
