@@ -1,7 +1,7 @@
 bin_PROGRAMS = rssd
-rssd_SOURCES = main.cpp
-rssd_CPPFLAGS = -I../poco-1.4.6p1-all/lib/Linux/x86_64
-rssd_LDFLAGS = -L../poco-1.4.6p1-all/lib/Linux/x86_64
-#rssd_LDADD = libx.a
+rssd_SOURCES = main.cpp update.cpp
+rssd_CPPFLAGS = -I/usr/local/include
+rssd_LDFLAGS = -L/usr/local/lib -lPocoXML -lPocoNet -lPocoUtil -lPocoFoundation
+#rssd_LDADD = libPocoXML.a
 
 
