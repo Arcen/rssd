@@ -13,8 +13,11 @@
 #include <Poco/Net/HTTPServerResponse.h>
 #include <Poco/Net/ServerSocket.h>
 #include <Poco/Util/Application.h>
+#include <Poco/SAX/AttributesImpl.h>
+#include <Poco/XML/XMLWriter.h>
 using namespace Poco::Net;
 using namespace Poco::Util;
+using namespace Poco::XML;
 
 class RootHandler: public Poco::Net::HTTPRequestHandler
 { 
@@ -23,7 +26,6 @@ public:
 	{ 
 		response.setContentType("text/xml");
 		std::ostream& ostr = response.send();
-		/*
 		redis r;
 		r.arg("zrange");
 		r.arg("articles");
@@ -31,10 +33,28 @@ public:
 		r.arg("3");
 		std::list<std::string> result;
 		r.exec_array(result);
-		for (std::list<std::string>:: result;
-		*/
-		ostr << "<a>abc</a>";
-		ostr << std::flush;
+		std::string rss;
+		rss =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+"<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">"
+"  <channel>"
+"    <atom:link rel=\"self\" type=\"application/rss+xml\" href=\"http://news.nicovideo.jp/topiclist?rss=2.0\"/>"
+"    <title>トピックス一覧-ニコニコニュース</title>"
+"    <link>http://news.nicovideo.jp/topiclist</link>"
+"    <description>ニコニコニュースで取り上げている最新ニュースを提供しています。</description>"
+"    <pubDate>Mon, 01 Jul 2013 14:39:44 +0900</pubDate>"
+"    <lastBuildDate>Mon, 01 Jul 2013 14:39:44 +0900</lastBuildDate>"
+"    <generator>ニコニコニュース</generator>"
+"    <language>ja</language>"
+"    <copyright>(c) niwango, inc. All rights reserved.</copyright>"
+"    <docs>http://blogs.law.harvard.edu/tech/rss</docs>";
+
+		for (std::list<std::string>::iterator it = result.begin(), end = result.end(); it != end; ++it)
+		{
+			rss += *it;
+		}
+		rss += "</channel></rss>";
+		ostr << rss << std::flush;
 	} 
 };
 

@@ -9,12 +9,11 @@
 #include <Poco/SAX/SAXParser.h>
 #include <Poco/SAX/ContentHandler.h>
 #include <Poco/SAX/LexicalHandler.h>
-#include <Poco/SAX/AttributesImpl.h>
-
 #include <Poco/Net/HTTPClientSession.h>
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/StreamCopier.h>
+#include <Poco/SAX/AttributesImpl.h>
 #include <Poco/XML/XMLWriter.h>
 #include <time.h>
 
@@ -43,6 +42,10 @@ public:
 	virtual void startElement(const XMLString& uri, const XMLString& localName, const XMLString& qname, const Attributes& attrList)
 	{
 		path.push_back(localName);
+		if (localName == "item")
+		{
+			params.clear();
+		}
 	}
 	time_t dateToUnixTime(const std::string & value)
 	{
