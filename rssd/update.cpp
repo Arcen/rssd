@@ -45,6 +45,7 @@ public:
 		{
 			params.clear();
 		}
+		text.clear();
 	}
 	time_t dateToUnixTime(const std::string & value)
 	{
@@ -180,7 +181,7 @@ public:
 				r.exec_integer();
 			}
 			params.clear();
-		} else if (localName == "title" || localName == "link" || localName == "pubDate" || localName == "guid") {
+		} else if (localName == "title" || localName == "link" || localName == "pubDate" || localName == "guid" || localName == "description") {
 			params[localName] = text;
 		}
 		path.pop_back();
