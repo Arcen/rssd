@@ -29,7 +29,7 @@ public:
 		redis r;
 		r.arg("zrange");
 		r.arg("articles");
-		r.arg("-5");
+		r.arg("0");
 		r.arg("-1");
 		std::list<std::string> result;
 		r.exec_array(result);
@@ -70,14 +70,8 @@ public:
 	}
 };
 
-
-bool update(const std::string & host, const std::string & path);
-
 int main(int argc, char *argv[])
 {
-
-	update("news.nicovideo.jp", "/topiclist?rss=2.0");
-
 	Poco::UInt16 port = 9999;
 	HTTPServerParams::Ptr pParams(new HTTPServerParams); 
 	pParams->setMaxQueued(100); 

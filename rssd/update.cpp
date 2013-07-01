@@ -214,3 +214,14 @@ bool update(const std::string & host, const std::string & path)
 	}
 	return true;
 }
+int main(int argc, char *argv[])
+{
+	if (1 < argc)
+	{
+		Poco::URI arg = Poco::URI(std::string(argv[1]));
+		update(arg.getHost(), arg.getPathAndQuery());
+	} else {
+		update("news.nicovideo.jp", "/topiclist?rss=2.0");
+	}
+	return 0;
+}
