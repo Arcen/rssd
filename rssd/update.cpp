@@ -117,10 +117,12 @@ public:
 			if (!params["guid"].empty())
 			{
 				r.arg("ZADD");
-				r.arg("articles");
+				r.arg("history");
 				char buf[1024];
 				sprintf(buf, "%d", dateToUnixTime(params["pubDate"]));
 				r.arg(buf);//score
+				r.arg(params["guid"]);
+				r.exec_string();
 
 				std::ostringstream str;
 				//XMLWriter writer(str, XMLWriter::WRITE_XML_DECLARATION | XMLWriter::PRETTY_PRINT);
@@ -150,10 +152,15 @@ public:
 						writer.characters(params["description"]);
 						writer.endElement("", "", "description");
 					}
+					{
+						writer.startElement("", "", "guid");
+						writer.characters(params["guid"]);
+						writer.endElement("", "", "guid");
+					}
 					writer.endElement("", "", "item");
 				}
 				writer.endDocument();
-				r.arg(str.str());
+				std::string value = str.str();
 				/*
 				picojson::object o;
 				o["title"] = (picojson::value)params["title"];
@@ -161,7 +168,11 @@ public:
 				o["description"] = (picojson::value)params["description"];
 				picojson::value v(o);
 				r.arg(v.serialize());*/
-				r.exec_string();
+				r.arg("HSET");
+				r.arg("items");
+				r.arg(params["guid"]);
+				r.arg(value);
+				r.exec_integer();
 			}
 			params.clear();
 		} else if (localName == "title" || localName == "link" || localName == "pubDate" || localName == "guid") {

@@ -28,11 +28,12 @@ public:
 		std::ostream& ostr = response.send();
 		redis r;
 		r.arg("zrange");
-		r.arg("articles");
+		r.arg("history");
 		r.arg("0");
 		r.arg("-1");
 		std::list<std::string> result;
 		r.exec_array(result);
+
 		std::string rss;
 		rss =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -51,7 +52,10 @@ public:
 
 		for (std::list<std::string>::reverse_iterator it = result.rbegin(), end = result.rend(); it != end; ++it)
 		{
-			rss += *it;
+			r.arg("hget");
+			r.arg("items");
+			r.arg(*it);
+			rss += r.exec_string().second;
 		}
 		rss += "</channel></rss>";
 		ostr << rss << std::flush;
