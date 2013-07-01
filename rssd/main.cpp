@@ -1,23 +1,31 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <memory>
 #include <string>
-#if 0
+
 #include <Poco/Net/HTTPRequestHandlerFactory.h>
 #include <Poco/Net/HTTPServerRequest.h>
+#include <Poco/Net/HTTPRequestHandler.h>
+#include <Poco/Net/HTTPServerParams.h>
+#include <Poco/Net/HTTPResponse.h>
+#include <Poco/Net/HTTPServer.h>
+#include <Poco/Net/HTTPServerResponse.h>
+#include <Poco/Net/ServerSocket.h>
+#include <Poco/Util/Application.h>
+using namespace Poco::Net;
+using namespace Poco::Util;
 
 class RootHandler: public Poco::Net::HTTPRequestHandler
 { 
 public: 
 	void handleRequest(Poco::Net::HTTPServerRequest& request, Poco::Net::HTTPServerResponse& response) 
 	{ 
-		Application& app = Application::instance();
-		app.logger().information("Request from " + request.clientAddress().toString());
-		response.setChunkedTransferEncoding(true); 
 		response.setContentType("text/xml");
 		std::ostream& ostr = response.send();
-		ostr << "<html><head><title>HTTP Server powered by POCO C++ Libraries</title></head>"; 
-		ostr << "<body>"; 
-		ostr << "</body></html>"; 
+
+
+		ostr << "<a>abc</a>";
+		ostr << std::flush;
 	} 
 };
 
@@ -29,33 +37,33 @@ public:
 	}
 	Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest& request)
 	{
-		if (request.getURI() == "/") 
-			return new RootHandler(); 
-		else 
-			return new DataHandler(); 
+		return new RootHandler(); 
 	}
 };
 
-#endif
+
 bool update(const std::string & host, const std::string & path);
 
 int main(int argc, char *argv[])
 {
-	/*
+
+	update("news.nicovideo.jp", "/topiclist?rss=2.0");
+
 	Poco::UInt16 port = 9999;
-	std::shared_ptr<HTTPServerParams> pParams(new HTTPServerParams); 
+	HTTPServerParams::Ptr pParams(new HTTPServerParams); 
 	pParams->setMaxQueued(100); 
 	pParams->setMaxThreads(16); 
 	ServerSocket svs(port); // set-up a server socket 
-	HTTPServer srv(new MyRequestHandlerFactory(), svs, pParams); 
+	HTTPRequestHandlerFactory::Ptr factory(new MyRequestHandlerFactory());
+	HTTPServer srv(factory, svs, pParams); 
 	// start the HTTPServer 
 	srv.start(); 
-	waitForTerminationRequest(); 
+	while (true)
+	{
+		sleep(1);
+	}
 	// Stop the HTTPServer 
 	srv.stop();
-	*/
-
-	update("news.nicovideo.jp", "/topiclist?rss=2.0");
 
 	return 0;
 }
