@@ -12,7 +12,7 @@ depcomp
 missing
 stamp-h1
 
-rssd
+rssd/rssd
 #for poco
 bin
 .dep
