@@ -90,6 +90,7 @@ public:
 			tmt -= atoi(zone_hour.c_str()) * 3600;
 			tmt -= atoi(zone_minutes.c_str()) * 60;
 		}
+		//printf("%s-%s-%s %s:%s:%s\n", year.c_str(), month.c_str(), day.c_str(), hours.c_str(), minutes.c_str(), seconds.c_str());
 		return tmt;
 	}
 	virtual void endElement(const XMLString& uri, const XMLString& localName, const XMLString& qname)
