@@ -29,8 +29,8 @@ public:
 		redis r;
 		r.arg("zrange");
 		r.arg("articles");
-		r.arg("0");
-		r.arg("3");
+		r.arg("-5");
+		r.arg("-1");
 		std::list<std::string> result;
 		r.exec_array(result);
 		std::string rss;
@@ -49,7 +49,7 @@ public:
 "    <copyright>(c) niwango, inc. All rights reserved.</copyright>"
 "    <docs>http://blogs.law.harvard.edu/tech/rss</docs>";
 
-		for (std::list<std::string>::iterator it = result.begin(), end = result.end(); it != end; ++it)
+		for (std::list<std::string>::reverse_iterator it = result.rbegin(), end = result.rend(); it != end; ++it)
 		{
 			rss += *it;
 		}

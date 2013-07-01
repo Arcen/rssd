@@ -15,6 +15,7 @@
 #include <Poco/StreamCopier.h>
 #include <Poco/SAX/AttributesImpl.h>
 #include <Poco/XML/XMLWriter.h>
+#include <Poco/URI.h>
 #include <time.h>
 
 #include "redis.h"
@@ -23,8 +24,6 @@
 using namespace Poco;
 using namespace Poco::XML;
 using namespace Poco::Net;
-
-
 
 class MyHandler: public ContentHandler, public LexicalHandler
 {
