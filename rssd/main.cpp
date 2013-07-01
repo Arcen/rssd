@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <memory>
 #include <string>
+#include "redis.h"
 
 #include <Poco/Net/HTTPRequestHandlerFactory.h>
 #include <Poco/Net/HTTPServerRequest.h>
@@ -22,8 +23,16 @@ public:
 	{ 
 		response.setContentType("text/xml");
 		std::ostream& ostr = response.send();
-
-
+		/*
+		redis r;
+		r.arg("zrange");
+		r.arg("articles");
+		r.arg("0");
+		r.arg("3");
+		std::list<std::string> result;
+		r.exec_array(result);
+		for (std::list<std::string>:: result;
+		*/
 		ostr << "<a>abc</a>";
 		ostr << std::flush;
 	} 

@@ -100,6 +100,35 @@ public:
 			return std::make_pair(false, std::string());
 		}
 	}
+	bool exec_array(std::list<std::string> & result)
+	{
+		redisReply * reply = (redisReply*)redisCommandArgv(ctx, argv.size(), &argv_ptr[0], &argv_len[0]);
+		argv.clear();
+		argv_len.clear();
+		argv_ptr.clear();
+		switch (reply->type)
+		{
+		case REDIS_REPLY_ARRAY:
+			{
+				for (size_t i = 0; i < reply->elements; ++i)
+				{
+					switch (reply->element[i]->type)
+					{
+					case REDIS_REPLY_STRING:
+						std::string status(reply->element[i]->str, reply->element[i]->str + reply->element[i]->len);
+						result.push_back(status);
+						break;
+					}
+				}
+				freeReplyObject(reply);
+				return true;
+			}
+			break;
+		default:
+			freeReplyObject(reply);
+			return false;
+		}
+	}
 };
 
 #endif

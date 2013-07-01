@@ -9,10 +9,13 @@
 #include <Poco/SAX/SAXParser.h>
 #include <Poco/SAX/ContentHandler.h>
 #include <Poco/SAX/LexicalHandler.h>
+#include <Poco/SAX/AttributesImpl.h>
+
 #include <Poco/Net/HTTPClientSession.h>
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/StreamCopier.h>
+#include <Poco/XML/XMLWriter.h>
 #include <time.h>
 
 #include "redis.h"
@@ -21,6 +24,8 @@
 using namespace Poco;
 using namespace Poco::XML;
 using namespace Poco::Net;
+
+
 
 class MyHandler: public ContentHandler, public LexicalHandler
 {
@@ -86,6 +91,24 @@ public:
 	}
 	virtual void endElement(const XMLString& uri, const XMLString& localName, const XMLString& qname)
 	{
+		while (!text.empty())
+		{
+			if (*text.begin() == ' ' || *text.begin() == '\r' || *text.begin() == '\t' || *text.begin() == '\n')
+			{
+				text.erase(text.begin(), text.begin() + 1);
+			} else {
+				break;
+			}
+		}
+		while (!text.empty())
+		{
+			if (*text.rbegin() == ' ' || *text.rbegin() == '\r' || *text.rbegin() == '\t' || *text.rbegin() == '\n')
+			{
+				text.resize(text.size() - 1);
+			} else {
+				break;
+			}
+		}
 		if (localName == "item")
 		{
 			if (!params["guid"].empty())
@@ -95,12 +118,46 @@ public:
 				char buf[1024];
 				sprintf(buf, "%d", dateToUnixTime(params["pubDate"]));
 				r.arg(buf);//score
+
+				std::ostringstream str;
+				//XMLWriter writer(str, XMLWriter::WRITE_XML_DECLARATION | XMLWriter::PRETTY_PRINT);
+				XMLWriter writer(str, 0);
+				//writer.setNewLine("\n");
+				writer.startDocument();
+				//<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+				{
+					//AttributesImpl attrs;
+					//attrs.addAttribute("", "", "version", "", "2.0");
+					//writer.startElement("", "", "rss", attrs);
+				}
+				{
+					writer.startElement("", "", "item");
+					{
+						writer.startElement("", "", "title");
+						writer.characters(params["title"]);
+						writer.endElement("", "", "title");
+					}
+					{
+						writer.startElement("", "", "link");
+						writer.characters(params["link"]);
+						writer.endElement("", "", "link");
+					}
+					{
+						writer.startElement("", "", "description");
+						writer.characters(params["description"]);
+						writer.endElement("", "", "description");
+					}
+					writer.endElement("", "", "item");
+				}
+				writer.endDocument();
+				r.arg(str.str());
+				/*
 				picojson::object o;
 				o["title"] = (picojson::value)params["title"];
 				o["link"] = (picojson::value)params["link"];
 				o["description"] = (picojson::value)params["description"];
 				picojson::value v(o);
-				r.arg(v.serialize());
+				r.arg(v.serialize());*/
 				r.exec_string();
 			}
 			params.clear();
