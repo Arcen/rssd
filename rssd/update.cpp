@@ -16,6 +16,7 @@
 #include <time.h>
 
 #include "redis.h"
+#include "picojson.h"
 
 using namespace Poco;
 using namespace Poco::XML;
@@ -94,7 +95,13 @@ public:
 				char buf[1024];
 				sprintf(buf, "%d", dateToUnixTime(params["pubDate"]));
 				r.arg(buf);//score
-
+				picojson::object o;
+				o["title"] = (picojson::value)params["title"];
+				o["link"] = (picojson::value)params["link"];
+				o["description"] = (picojson::value)params["description"];
+				picojson::value v(o);
+				r.arg(v.serialize());
+				r.exec_string();
 			}
 			params.clear();
 		} else if (localName == "title" || localName == "link" || localName == "pubDate" || localName == "guid") {
